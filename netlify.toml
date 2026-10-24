@@ -1,0 +1,19 @@
+[build]
+  publish = "dist"
+  # Public values only (Supabase URL + anon key). Set both in Netlify > Site configuration > Environment variables.
+  command = "mkdir -p dist && cp -r index.html admin images dist/ && printf 'window.SB={url:\"%s\",key:\"%s\"};' \"$SUPABASE_URL\" \"$SUPABASE_ANON_KEY\" > dist/config.js"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+    X-Frame-Options = "DENY"
+    Cache-Control = "no-store"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'; base-uri 'none'; form-action 'self'"
